@@ -2,6 +2,7 @@ package pnm
 
 import (
 	"errors"
+	"fmt"
 	"image"
 	"image/color"
 	"strconv"
@@ -11,6 +12,7 @@ var (
 	errBadPPMSample = errors.New("pnm: PPM画像のサンプル値が不正です")
 )
 
+// Reader用
 func (d *pnmDecoder) ppmReadRaster() (image.Image, error) {
 	var (
 		i, j, k     int
@@ -79,4 +81,61 @@ func (d *pnmDecoder) ppmReadRaster() (image.Image, error) {
 		}
 	}
 	return img, nil
+}
+
+// Writer用
+func (e *pnmEncoder) ppmWriteRasterPlain(img image.Image) error {
+	var (
+		i, j    int
+		r, g, b uint32
+	)
+
+	rect := img.Bounds()
+	for i = rect.Min.Y; i < rect.Max.Y; i++ {
+		for j = rect.Min.X; j < rect.Max.X; j++ {
+			r, g, b, _ = rect.At(j, i).RGBA()
+			e.writer.WriteString(
+				fmt.Sprintf("%d %d %d",
+					r,
+					g,
+					b,
+				),
+			)
+			if j == rect.Max.X-1 {
+				e.writer.WriteRune('\n')
+			} else {
+				e.writer.WriteRune(' ')
+			}
+		}
+	}
+	return nil
+}
+func (e *pnmEncoder) ppmWriteRasterBinary(img image.Image) error {
+	var (
+		i, j    int
+		r, g, b uint32
+		overFF  bool
+	)
+
+	overFF = (e.h.maxValue > 255)
+	rect := img.Bounds()
+	for i = rect.Min.Y; i < rect.Max.Y; i++ {
+		for j = rect.Min.X; j < rect.Max.X; j++ {
+			r, g, b, _ = rect.At(j, i).RGBA()
+			if overFF {
+				e.writer.Write([]byte{
+					byte(r >> 8), byte(r & 0xFF),
+					byte(g >> 8), byte(g & 0xFF),
+					byte(b >> 8), byte(b & 0xFF),
+				})
+			} else {
+				e.writer.Write([]byte{
+					byte(r & 0xFF),
+					byte(g & 0xFF),
+					byte(b & 0xFF),
+				})
+			}
+		}
+	}
+	return nil
 }

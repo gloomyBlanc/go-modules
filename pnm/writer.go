@@ -78,6 +78,11 @@ func (e *pnmEncoder) encode(w io.Writer, img image.Image, magic string) error {
 			e.h.height,
 			e.h.maxValue,
 		)
+		if isPlain(e.h.magicNumber) {
+			return e.ppmWriteRasterPlain(img)
+		} else {
+			return e.ppmWriteRasterBinary(img)
+		}
 	}
 	return nil
 }
