@@ -17,14 +17,14 @@ func (d *pnmDecoder) pbmReadRaster() (image.Image, error) {
 		err     error
 	)
 
-	img := image.NewGray(image.Rect(0, 0, d.width, d.height))
-	for i = 0; i < d.height; i++ {
-		for j = 0; j < d.width; {
+	img := image.NewGray(image.Rect(0, 0, d.h.width, d.h.height))
+	for i = 0; i < d.h.height; i++ {
+		for j = 0; j < d.h.width; {
 			b, err = d.reader.ReadByte()
 			if err != nil {
 				return nil, errBadPBMSample
 			}
-			switch d.magicNumber {
+			switch d.h.magicNumber {
 			case "P1":
 				if !isWhiteSpece(b) {
 					img.SetGray(j, i, color.Gray{255 * (b - '0')})

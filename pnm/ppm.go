@@ -21,24 +21,24 @@ func (d *pnmDecoder) ppmReadRaster() (image.Image, error) {
 		overFF      bool
 		enSampleEnd bool
 	)
-	overFF = (d.maxValue < 256)
-	img := image.NewRGBA64(image.Rect(0, 0, d.width, d.height))
+	overFF = (d.h.maxValue < 256)
+	img := image.NewRGBA64(image.Rect(0, 0, d.h.width, d.h.height))
 
 	enSampleEnd = false
-	for i = 0; i < d.height; i++ {
-		for j = 0; j < d.width; j++ {
+	for i = 0; i < d.h.height; i++ {
+		for j = 0; j < d.h.width; j++ {
 			for k = 0; k < 3; {
 				b, err = d.reader.ReadByte()
 				if err != nil {
-					return nil, errBadPGMSample
+					return nil, errBadPPMSample
 				}
-				switch d.magicNumber {
+				switch d.h.magicNumber {
 				case "P3":
 					if enSampleEnd {
 						if isWhiteSpece(b) {
 							pixel[k], err = strconv.Atoi(string(readBytes))
 							if err != nil {
-								return nil, errBadPGMSample
+								return nil, errBadPPMSample
 							}
 							readBytes = []byte{}
 							enSampleEnd = false

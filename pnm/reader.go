@@ -37,24 +37,24 @@ func DecodeConfig(r io.Reader) (image.Config, error) {
 		return image.Config{}, err
 	}
 
-	switch sortPNM(d.magicNumber) {
+	switch sortPNM(d.h.magicNumber) {
 	case PBM:
 		return image.Config{
 			ColorModel: color.GrayModel,
-			Width:      d.width,
-			Height:     d.height,
+			Width:      d.h.width,
+			Height:     d.h.height,
 		}, nil
 	case PGM:
 		return image.Config{
 			ColorModel: color.Gray16Model,
-			Width:      d.width,
-			Height:     d.height,
+			Width:      d.h.width,
+			Height:     d.h.height,
 		}, nil
 	case PPM:
 		return image.Config{
 			ColorModel: color.RGBA64Model,
-			Width:      d.width,
-			Height:     d.height,
+			Width:      d.h.width,
+			Height:     d.h.height,
 		}, nil
 	}
 	return image.Config{}, errBadMagicNum
@@ -63,9 +63,7 @@ func DecodeConfig(r io.Reader) (image.Config, error) {
 type pnmDecoder struct {
 	reader *bufio.Reader
 	// ヘッダ情報
-	magicNumber   string
-	width, height int
-	maxValue      int
+	h pnmHeader
 }
 
 ///
@@ -79,7 +77,7 @@ func (d *pnmDecoder) decode(r io.Reader, isConfig bool) (image.Image, error) {
 		return nil, err
 	}
 	if !isConfig {
-		switch sortPNM(d.magicNumber) {
+		switch sortPNM(d.h.magicNumber) {
 		case PBM:
 			return d.pbmReadRaster()
 		case PGM:
@@ -121,12 +119,16 @@ func (d *pnmDecoder) decodeHeader() error {
 		}
 	}
 	// メンバ変数に代入
-	d.magicNumber = string(readBytes[0])
-	d.width, err = strconv.Atoi(string(readBytes[1]))
+	d.h.magicNumber = string(readBytes[0])
+	d.h.width, err = strconv.Atoi(string(readBytes[1]))
 	if err != nil {
 		return errBadHeader
 	}
-	d.width, err = strconv.Atoi(string(readBytes[2]))
+	d.h.height, err = strconv.Atoi(string(readBytes[2]))
+	if err != nil {
+		return errBadHeader
+	}
+	d.h.maxValue, err = strconv.Atoi(string(readBytes[3]))
 	if err != nil {
 		return errBadHeader
 	}

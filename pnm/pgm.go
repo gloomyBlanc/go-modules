@@ -21,17 +21,17 @@ func (d *pnmDecoder) pgmReadRaster() (image.Image, error) {
 		overFF      bool
 		enSampleEnd bool
 	)
-	overFF = (d.maxValue < 256)
-	img := image.NewGray16(image.Rect(0, 0, d.width, d.height))
+	overFF = (d.h.maxValue < 256)
+	img := image.NewGray16(image.Rect(0, 0, d.h.width, d.h.height))
 
 	enSampleEnd = false
-	for i = 0; i < d.height; i++ {
-		for j = 0; j < d.width; {
+	for i = 0; i < d.h.height; i++ {
+		for j = 0; j < d.h.width; {
 			b, err = d.reader.ReadByte()
 			if err != nil {
 				return nil, errBadPGMSample
 			}
-			switch d.magicNumber {
+			switch d.h.magicNumber {
 			case "P2":
 				if enSampleEnd {
 					if isWhiteSpece(b) {
@@ -40,7 +40,7 @@ func (d *pnmDecoder) pgmReadRaster() (image.Image, error) {
 							return nil, errBadPGMSample
 						}
 						img.SetGray16(j, i,
-							color.Gray16{uint16(pixel * 65536.0 / d.maxValue)},
+							color.Gray16{uint16(pixel * 65536.0 / d.h.maxValue)},
 						)
 						readBytes = []byte{}
 						enSampleEnd = false
@@ -57,7 +57,7 @@ func (d *pnmDecoder) pgmReadRaster() (image.Image, error) {
 					if enSampleEnd {
 						pixel = (pixel << 8) | int(b-'0')
 						img.SetGray16(j, i,
-							color.Gray16{uint16(pixel * 65536.0 / d.maxValue)},
+							color.Gray16{uint16(pixel * 65536.0 / d.h.maxValue)},
 						)
 						enSampleEnd = false
 						j += 1
@@ -68,7 +68,7 @@ func (d *pnmDecoder) pgmReadRaster() (image.Image, error) {
 				} else {
 					pixel = int(b - '0')
 					img.SetGray16(j, i,
-						color.Gray16{uint16(pixel * 65536.0 / d.maxValue)},
+						color.Gray16{uint16(pixel * 65536.0 / d.h.maxValue)},
 					)
 					j += 1
 				}
