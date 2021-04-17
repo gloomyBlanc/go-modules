@@ -85,6 +85,7 @@ func (d *pnmDecoder) decode(r io.Reader, isConfig bool) (image.Image, error) {
 		case PGM:
 			return d.pgmReadRaster()
 		case PPM:
+			return d.ppmReadRaster()
 		}
 	}
 	return nil, nil

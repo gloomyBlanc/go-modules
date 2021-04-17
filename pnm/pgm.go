@@ -32,7 +32,7 @@ func (d *pnmDecoder) pgmReadRaster() (image.Image, error) {
 				return nil, errBadPGMSample
 			}
 			switch d.magicNumber {
-			case "P1":
+			case "P2":
 				if enSampleEnd {
 					if isWhiteSpece(b) {
 						pixel, err = strconv.Atoi(string(readBytes))
@@ -52,7 +52,7 @@ func (d *pnmDecoder) pgmReadRaster() (image.Image, error) {
 					readBytes = append(readBytes, b)
 					enSampleEnd = true
 				}
-			case "P4":
+			case "P5":
 				if overFF {
 					if enSampleEnd {
 						pixel = (pixel << 8) | int(b-'0')
