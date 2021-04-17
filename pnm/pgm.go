@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	errBadPGMSample = errors.New("pnm:PGM画像のサンプル値が不正です")
+	errBadPGMSample = errors.New("pnm: PGM画像のサンプル値が不正です")
 )
 
 func (d *pnmDecoder) pgmReadRaster() (image.Image, error) {
