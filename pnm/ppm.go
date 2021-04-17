@@ -21,7 +21,7 @@ func (d *pnmDecoder) ppmReadRaster() (image.Image, error) {
 		overFF      bool
 		enSampleEnd bool
 	)
-	overFF = (d.h.maxValue < 256)
+	overFF = (d.h.maxValue > 255)
 	img := image.NewNRGBA64(image.Rect(0, 0, d.h.width, d.h.height))
 
 	enSampleEnd = false

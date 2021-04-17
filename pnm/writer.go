@@ -10,7 +10,7 @@ import (
 
 var (
 	errBadImageSize  = errors.New("pnm: 入力画像が不正です")
-	errUnsupportType = errors.New("pnm: サポートされていないModelです")
+	errUnsupportType = errors.New("pnm: サポートされていないカラーモードです")
 )
 
 // グレースケールの場合はPGM形式で、カラー画像の場合はPPM形式でWriterに返す
@@ -65,6 +65,11 @@ func (e *pnmEncoder) encode(w io.Writer, img image.Image, magic string) error {
 			e.h.height,
 			e.h.maxValue,
 		)
+		if isPlain(e.h.magicNumber) {
+			return e.pgmWriteRasterPlain(img)
+		} else {
+			return e.pgmWriteRasterBinary(img)
+		}
 	case PPM:
 		fmt.Fprintf(e.writer,
 			"%s\n%d %d\n%d\n",
