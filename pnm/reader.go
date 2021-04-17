@@ -52,7 +52,7 @@ func DecodeConfig(r io.Reader) (image.Config, error) {
 		}, nil
 	case PPM:
 		return image.Config{
-			ColorModel: color.RGBA64Model,
+			ColorModel: color.NRGBA64Model,
 			Width:      d.h.width,
 			Height:     d.h.height,
 		}, nil

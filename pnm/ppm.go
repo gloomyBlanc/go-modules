@@ -22,7 +22,7 @@ func (d *pnmDecoder) ppmReadRaster() (image.Image, error) {
 		enSampleEnd bool
 	)
 	overFF = (d.h.maxValue < 256)
-	img := image.NewRGBA64(image.Rect(0, 0, d.h.width, d.h.height))
+	img := image.NewNRGBA64(image.Rect(0, 0, d.h.width, d.h.height))
 
 	enSampleEnd = false
 	for i = 0; i < d.h.height; i++ {
@@ -67,8 +67,8 @@ func (d *pnmDecoder) ppmReadRaster() (image.Image, error) {
 				}
 			}
 			// pixel値の代入
-			img.SetRGBA64(j, i,
-				color.RGBA64{
+			img.SetNRGBA64(j, i,
+				color.NRGBA64{
 					uint16(pixel[0]),
 					uint16(pixel[1]),
 					uint16(pixel[2]),
