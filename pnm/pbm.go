@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	errBadSample = errors.New("サンプル値が不正です")
+	errBadPBMSample = errors.New("pnm:PBM画像のサンプル値が不正です")
 )
 
 func (d *pnmDecoder) pbmReadRaster() (image.Image, error) {
@@ -22,7 +22,7 @@ func (d *pnmDecoder) pbmReadRaster() (image.Image, error) {
 		for j = 0; j < d.width; {
 			b, err = d.reader.ReadByte()
 			if err != nil {
-				return nil, errBadSample
+				return nil, errBadPBMSample
 			}
 			switch d.magicNumber {
 			case "P1":

@@ -38,9 +38,15 @@ func DecodeConfig(r io.Reader) (image.Config, error) {
 	}
 
 	switch sortPNM(d.magicNumber) {
-	case PBM, PGM:
+	case PBM:
 		return image.Config{
 			ColorModel: color.GrayModel,
+			Width:      d.width,
+			Height:     d.height,
+		}, nil
+	case PGM:
+		return image.Config{
+			ColorModel: color.Gray16Model,
 			Width:      d.width,
 			Height:     d.height,
 		}, nil
@@ -62,7 +68,10 @@ type pnmDecoder struct {
 	maxValue      int
 }
 
+///
 // メソッド
+///
+// デコーダ本体
 func (d *pnmDecoder) decode(r io.Reader, isConfig bool) (image.Image, error) {
 	d.reader = bufio.NewReader(r)
 	err := d.decodeHeader()
@@ -74,12 +83,14 @@ func (d *pnmDecoder) decode(r io.Reader, isConfig bool) (image.Image, error) {
 		case PBM:
 			return d.pbmReadRaster()
 		case PGM:
+			return d.pgmReadRaster()
 		case PPM:
 		}
 	}
 	return nil, nil
 }
 
+// ヘッダ情報の取得
 func (d *pnmDecoder) decodeHeader() error {
 	var (
 		i         int
