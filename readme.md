@@ -5,7 +5,7 @@ PNM(PBM/PGM/PPM)形式の画像に対するエンコーダ・デコーダです�
 
 ## 使い方
 ```
-import "gloomyBlanc/go-modules"
+import "github.com/gloomyBlanc/go-modules"
 ```
 
 ### func [Decode](pnm/reader.go#28)
