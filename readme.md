@@ -1,20 +1,20 @@
 # Go言語モジュール群
 
-## pnm
+# pnm
 PNM(PBM/PGM/PPM)形式の画像に対するエンコーダ・デコーダです。
 
-### 使い方
+## 使い方
 ```
 import "gloomyBlanc/go-modules"
 ```
 
-#### func [Decode](pnm/reader.go#28)
+### func [Decode](pnm/reader.go#28)
 <pre>
 func Decode(r <a href="https://pkg.go.dev/io">io</a>.<a href="https://pkg.go.dev/io#Reader">Reader</a>) (<a href="https://pkg.go.dev/image">image</a>.<a href="https://pkg.go.dev/image#Image">Image</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)
 </pre>
 PNM画像をReaderから読み込み、image.Imageとして返します。
 
-#### func [DecodeConfig](pnm/reader.go#33)
+### func [DecodeConfig](pnm/reader.go#33)
 <pre>
 func DecodeConfig(r <a href="https://pkg.go.dev/io">io</a>.<a href="https://pkg.go.dev/io#Reader">Reader</a>) (<a href="https://pkg.go.dev/image">image</a>.<a href="https://pkg.go.dev/image#Config">Config</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)
 </pre>
