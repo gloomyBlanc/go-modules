@@ -55,15 +55,15 @@ func (d *pnmDecoder) ppmReadRaster() (image.Image, error) {
 				case "P6":
 					if overFF {
 						if enSampleEnd {
-							pixel[k] = (pixel[k] << 8) | int(b-'0')
+							pixel[k] = (pixel[k] << 8) | int(b)
 							enSampleEnd = false
 							k += 1
 						} else {
-							pixel[k] = int(b - '0')
+							pixel[k] = int(b)
 							enSampleEnd = true
 						}
 					} else {
-						pixel[k] = int(b - '0')
+						pixel[k] = int(b)
 						k += 1
 					}
 				}
@@ -71,9 +71,9 @@ func (d *pnmDecoder) ppmReadRaster() (image.Image, error) {
 			// pixel値の代入
 			img.SetNRGBA64(j, i,
 				color.NRGBA64{
-					uint16(pixel[0]),
-					uint16(pixel[1]),
-					uint16(pixel[2]),
+					uint16(pixel[0] * 65536.0 / d.h.maxValue),
+					uint16(pixel[1] * 65536.0 / d.h.maxValue),
+					uint16(pixel[2] * 65536.0 / d.h.maxValue),
 					0xFFFF,
 				},
 			)

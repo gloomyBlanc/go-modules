@@ -56,18 +56,18 @@ func (d *pnmDecoder) pgmReadRaster() (image.Image, error) {
 			case "P5":
 				if overFF {
 					if enSampleEnd {
-						pixel = (pixel << 8) | int(b-'0')
+						pixel = (pixel << 8) | int(b)
 						img.SetGray16(j, i,
 							color.Gray16{uint16(pixel * 65536.0 / d.h.maxValue)},
 						)
 						enSampleEnd = false
 						j += 1
 					} else {
-						pixel = int(b - '0')
+						pixel = int(b)
 						enSampleEnd = true
 					}
 				} else {
-					pixel = int(b - '0')
+					pixel = int(b)
 					img.SetGray16(j, i,
 						color.Gray16{uint16(pixel * 65536.0 / d.h.maxValue)},
 					)
